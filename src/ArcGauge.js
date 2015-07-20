@@ -40,9 +40,10 @@ export default class ArcGauge extends Component {
 
     let arc = d3.svg.arc()
         .startAngle(deg2rad(-80))
+        .endAngle(deg2rad(80))
         .innerRadius(height - strokeWidth)
         .outerRadius(height)
-        .cornerRadius(strokeWidth);
+        .cornerRadius(strokeWidth/4);
 
     let svg = d3.select(el).append("svg")
         .attr("width", width)
@@ -51,13 +52,13 @@ export default class ArcGauge extends Component {
         .attr("transform", "translate(" + width / 2 + "," + height + ")");
 
     var meter = svg.append("g")
-        .attr("class", "progress-meter")
+        .attr("class", "progress-meter");
 
     meter.append("path")
         .style("fill", "#ccc")
-        .attr("d", arc.endAngle(deg2rad(80)));
+        .attr("d", arc);
 
-    let foreground = meter.append("path");//.style("fill", "#000");
+    let foreground = meter.append("path");
 
     let color = d3.scale.linear()
         .domain([0, 50, 100])
