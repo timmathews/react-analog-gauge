@@ -1,11 +1,11 @@
 {
   "name": "react-analog-gauge",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Simple analog gauge built in React",
   "scripts": {
     "start": "node server.js",
     "lint": "eslint src",
-    "compile": "babel src/ -d dist/"
+    "compile": "webpack"
   },
   "main": "dist/Gauge.js",
   "repository": {
