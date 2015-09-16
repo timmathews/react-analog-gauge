@@ -3,8 +3,8 @@ import ArcGauge from './ArcGauge';
 
 export default class Gauge extends Component {
   static propTypes = {
-    label: PropTypes.string.required,
-    value: PropTypes.number.required,
+    label: PropTypes.string.isRequired,
+    value: PropTypes.number.isRequired,
     units: PropTypes.string,
     topLabel: PropTypes.bool
   };

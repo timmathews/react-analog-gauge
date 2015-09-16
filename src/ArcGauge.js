@@ -4,33 +4,37 @@ import d3 from 'd3';
 
 export default class ArcGauge extends Component {
   static propTypes = {
-    value: PropTypes.number.required,
+    value: PropTypes.number.isRequired,
     width: PropTypes.number,
     strokeWidth: PropTypes.number
   };
-  
+
   componentDidMount() {
-    return this.renderArcGauge();
+    const gauge = this.renderArcGauge(this.props.value);
+
+    this.setState({gauge: gauge});
   }
-  
-  componentDidUpdate() {
-    return this.renderArcGauge();
+
+  componentWillReceiveProps(nextProps) {
+    if(this.state !== null) {
+      this.state.gauge.update(this.props.value);
+    }
   }
-  
+
   render() {
     return <div/>;
   }
-  
-  renderArcGauge() {
+
+  renderArcGauge(value) {
     function deg2rad(deg) {
       return deg / 180 * Math.PI;
     }
-    
-    const {value, width, strokeWidth} = this.props;
-    
+
+    const {width, strokeWidth} = this.props;
+
     const height = width / 2,
           el = React.findDOMNode(this);
-          
+
     while (el.firstChild) {
       el.removeChild(el.firstChild);
     }
@@ -73,15 +77,29 @@ export default class ArcGauge extends Component {
         .attr("font-size", "24px")
         .attr("font-weight", "bold")
         .attr("dy", "-1em")
-        .style("fill", function (){return color(value)});
+        .style("fill", function (){return color(value)})
+        .text(value.toFixed(2));
 
-    foreground.attr("d", arc.endAngle(deg2rad(80) * scale(value)))
+    foreground
+      .attr("d", arc.endAngle(deg2rad(80) * scale(value)))
       .style("fill", function() { return color(value) });
-
-    text.text(value.toFixed(2));
 
     meter.transition();
 
-    return meter;
+    function Updater() {
+      this.update = function(value) {
+        text
+          .style("fill", function (){return color(value)})
+          .text(value.toFixed(2));
+
+        foreground
+          .attr("d", arc.endAngle(deg2rad(80) * scale(value)))
+          .style("fill", function() { return color(value) });
+
+        meter.transition();
+      }
+    }
+
+    return new Updater();
   }
 }
